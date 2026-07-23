@@ -1,19 +1,48 @@
 # ProjectDM22, Project of Data Mining, year 2022
 
-Folder of the Astreo application, a machine learning application built in Python for the Data Mining and Machine Learning project at the University of Pisa.
+## Overview
 
+Folder of the Astreo application, a machine learning application built in Python for the Data Mining and Machine Learning project (Master's in AI and Data Engineering, University of Pisa).
+
+**Astreo** is a machine learning application that classifies celestial bodies (galaxy / star / quasar) from their spectral data, aimed at amateur astronomers. 
+
+**Goal & guiding constraint**: 
+The distinguishing design choice is accessibility: the classifier is meant to work with data that a hobbyist can realistically obtain at home, using consumer-grade telescopes and filters. 
+This constraint deliberately shaped the feature selection. 
+In particular, I excluded the redshift feature — even though analysis showed it was the single strongest predictor of the class — because measuring redshift requires elaborate techniques and equipment unavailable to amateurs. 
+The model therefore relies only on positional (α, δ) and photometric ugriz features, plus removal of instrument-related features (telescope/plate/observation IDs) that carry no physical meaning about the object.
+
+**Methodology**: 
+Full data-mining pipeline: data cleaning, feature reduction, per-algorithm transformations (z-score normalization for K-NN, Fayyad-Irani supervised discretization for Naive Bayes). 
+Several classifiers were compared under 10-fold cross-validation (J48/C4.5, JRIP, Naive Bayes, K-NN, and ensembles: Bagging, AdaBoost, Random Forest) across multiple attribute-selection strategies, with dataset-rebalancing experiments (SMOTE). 
+Model selection was confirmed with paired t-tests for statistical significance.
+
+**Result**: 
+Random Forest was selected — statistically the best — reaching ~88% average accuracy using only amateur-obtainable features.
+
+**Possible future work** 
+Since redshift was the most informative feature but is inaccessible to amateurs, a natural extension is a two-stage model: first estimate the redshift from the same photometric ugriz data (photometric redshift estimation is itself a studied ML problem), then feed the predicted redshift into the classifier to boost accuracy. 
+The net benefit is not guaranteed — the estimation error propagates downstream — so it would need to be validated empirically, but it is a promising direction for closing the accuracy gap without requiring specialized hardware from the user.
+
+**Tech stack**: 
+Python (scikit-learn, Tkinter GUI), Weka (model evaluation), MySQLWorkbench V6.1 and MySQL server V 5.6
+
+## Dataset
 The dataset used for the application can be found on kaggle at the following link: https://www.kaggle.com/fedesoriano/stellar-classification-dataset-sdss17
+Release 17 of the Sloan Digital Sky Survey (SDSS), ~100k observations.
 
-The following were used for the application: MySQLWorkbench V6.1 and MySQL server V 5.6
+## Hardware used
 
-The folder contains:
+CPU: Intel(R) Core(TM) i7-10870H CPU @ 2.20GHz 2.21 GHz RAM: 16 GB GPU: RTX 3060 6GB laptop
+
+## The folder contains:
 - 3 python files: AstreoGUI (main file, GUI), Classifier, DB_connect
 - dataset folder: contains the dataset in csv format
 - Dump_DM_project_DB: MySQL database
 - Others folder: for future implementations or machine learning experiments in Python
 - Data_Mining_Documentation: documentation regarding the application and the analysis carried out for the choice of model and parameters.
 
-Procedure for use:
+## Procedure for use:
 1) import the DB into MySQL Workbench
 2) start mysql server
 3) run 'AstreoGUI' file
@@ -157,3 +186,10 @@ g	13.00
 r	12.89
 i	12.64
 z	13.24
+
+## Developer's notes:
+	The work related to the university examination is finished and the project is completed. 
+	There may be updates or improvements to the project in the future.
+
+## Developers:
+	- Alessandro Diana
